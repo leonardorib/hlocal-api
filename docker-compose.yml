@@ -1,0 +1,27 @@
+version: '3'
+services:
+    app:
+        container_name: hlocal-api
+        image: hlocal-api-image
+        restart: always
+        build: .
+        env_file:
+            - .env
+        ports:
+            - 4000:4000
+        volumes:
+            - ./src:/home/app/hlocal-api/src
+            - /home/app/hlocal-api/node_modules
+        command: sh -c "npm install && npm run dev"
+        links:
+            - database
+
+    database:
+        container_name: hlocal-database
+        image: postgres:14.1
+        env_file:
+            - .env
+        volumes:
+            - ./.data/postgresql:/var/lib/postgresql/data
+        ports:
+            - '5432:5432'
