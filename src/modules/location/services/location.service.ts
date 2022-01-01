@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
 	Injectable,
 	NotFoundException,
 	UnauthorizedException,
@@ -10,6 +11,7 @@ import { CompanyRepository } from '../../database/repositories/company';
 import { IPaginationResponse } from 'modules/shared/interfaces/pagination';
 import { LocationRepository } from '../../database/repositories/location';
 import { AddressService } from '../../shared/services/address.service';
+import { IResponsible } from '../../responsibles/interfaces';
 
 @Injectable()
 export class LocationService {
@@ -52,7 +54,8 @@ export class LocationService {
 		createLocation: ICreateLocation,
 		currentUser: IUser,
 	): Promise<ILocation> {
-		const { addressCep, addressNumber, name, companyId } = createLocation;
+		const { addressCep, addressNumber, name, companyId, responsibles } =
+			createLocation;
 
 		const company = await this.companyRepository.findById(companyId);
 		if (!company) throw new NotFoundException('company-not-found');
@@ -65,12 +68,13 @@ export class LocationService {
 				addressCep,
 				addressNumber,
 			);
-
+		this.validateResponsibles(responsibles);
 		return this.locationRepository.createLocation(
 			{
 				name,
 				addressCep: cep,
 				addressFormatted: formattedAddress,
+				responsibles,
 			},
 			company,
 		);
@@ -81,7 +85,8 @@ export class LocationService {
 		updateLocation: IUpdateLocation,
 		currentUser: IUser,
 	): Promise<ILocation> {
-		const { name, addressCep, addressNumber } = updateLocation;
+		const { name, addressCep, addressNumber, responsibles } =
+			updateLocation;
 
 		const location = await this.locationRepository.findById(id);
 		if (!location) {
@@ -102,17 +107,34 @@ export class LocationService {
 			newCep = cep;
 			newAddress = formattedAddress;
 		}
-
+		this.validateResponsibles(responsibles);
 		const locationUpdated = await this.locationRepository.updateLocation(
 			id,
 			{
 				name,
 				addressCep: newCep,
 				addressFormatted: newAddress,
+				responsibles,
 			},
 		);
 
 		return locationUpdated;
+	}
+
+	private validateResponsibles(responsibles: IResponsible[]) {
+		const mainResponsibles = responsibles.filter(
+			(responsible) => responsible.isMainResponsible,
+		);
+
+		if (mainResponsibles.length === 0) {
+			throw new BadRequestException('Must have one main responsible');
+		}
+
+		if (mainResponsibles.length > 1) {
+			throw new BadRequestException(
+				'Must have only one main responsible',
+			);
+		}
 	}
 
 	public async delete(id: string, currentUser: IUser): Promise<ILocation> {

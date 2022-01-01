@@ -42,7 +42,10 @@ export class CompanyRepository extends ORM.Repository<DBCompany> {
 		id: string,
 		model: ORM.DeepPartial<DBCompany>,
 	): Promise<DBCompany> {
-		const company = this.create({ ...model, id });
+		const company = this.create({
+			...model,
+			id,
+		});
 		return this.save(company);
 	}
 

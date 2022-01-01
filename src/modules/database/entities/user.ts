@@ -29,7 +29,7 @@ export class DBUser implements IUser {
 	}
 
 	@OneToMany(() => DBCompany, (dbCompany) => dbCompany.user)
-	public companies: Promise<DBCompany>;
+	public companies: Promise<DBCompany[]>;
 
 	@CreateDateColumn()
 	createdAt: Date;

@@ -9,9 +9,9 @@ import { IUser } from '../../user/interfaces';
 import { cnpj as cnpjValidator } from 'cpf-cnpj-validator';
 
 import { CompanyRepository } from '../../database/repositories/company';
-import { classToClass } from 'class-transformer';
 import { UserRepository } from '../../database/repositories/user';
 import { IPaginationResponse } from 'modules/shared/interfaces/pagination';
+import { IResponsible } from '../../responsibles/interfaces';
 
 @Injectable()
 export class CompanyService {
@@ -58,6 +58,22 @@ export class CompanyService {
 		return !!existingCompany;
 	}
 
+	private validateResponsibles(responsibles: IResponsible[]) {
+		const mainResponsibles = responsibles.filter(
+			(responsible) => responsible.isMainResponsible,
+		);
+
+		if (mainResponsibles.length === 0) {
+			throw new BadRequestException('Must have one main responsible');
+		}
+
+		if (mainResponsibles.length > 1) {
+			throw new BadRequestException(
+				'Must have only one main responsible',
+			);
+		}
+	}
+
 	public async create(
 		model: Omit<ICompany, 'id'>,
 		currentUser: IUser,
@@ -66,17 +82,13 @@ export class CompanyService {
 
 		const cnpjNumber = this.validateAndTransformCnpj(cnpj);
 
-		if (await this.isCnpjInUse(cnpjNumber)) {
-			throw new BadRequestException('cnpj already in use');
-		}
+		this.validateResponsibles(model.responsibles);
 
-		const company = await this.companyRepository.createCompany({
+		return this.companyRepository.createCompany({
 			...model,
 			user: currentUser,
 			cnpj: cnpjNumber,
 		});
-
-		return classToClass(company);
 	}
 
 	public async update(
@@ -103,6 +115,8 @@ export class CompanyService {
 				throw new BadRequestException('cnpj already in use');
 			}
 		}
+
+		this.validateResponsibles(model.responsibles);
 
 		const companyUpdated = await this.companyRepository.updateCompany(id, {
 			...company,

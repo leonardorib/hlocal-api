@@ -1,3 +1,4 @@
+import { IResponsible } from '../../responsibles/interfaces';
 import { IUser } from '../../user/interfaces';
 
 export interface ICompany {
@@ -5,6 +6,8 @@ export interface ICompany {
 	name: string;
 	cnpj: string;
 	description: string;
+
+	responsibles: IResponsible[];
 
 	user?: IUser;
 }

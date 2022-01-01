@@ -7,18 +7,12 @@ import {
 	Length,
 	IsInt,
 	IsPositive,
-	IsArray,
-	ValidateNested,
-	ArrayMinSize,
-	ArrayMaxSize,
+	IsMobilePhone,
+	IsBoolean,
 } from 'class-validator';
-import { IResponsible } from '../../responsibles/interfaces';
-import { CreateResponsibleValidator } from '../../responsibles/validators/create';
-import { ILocation } from '../interfaces';
+import { IResponsible } from '../interfaces';
 
-export class CreateOrUpdateValidator
-	implements Omit<ILocation, 'id' | 'company' | 'addressFormatted'>
-{
+export class CreateResponsibleValidator implements Omit<IResponsible, 'id'> {
 	@IsNotEmpty()
 	@IsString()
 	@MinLength(3)
@@ -30,6 +24,22 @@ export class CreateOrUpdateValidator
 		maxLength: 50,
 	})
 	public name: string;
+
+	@IsNotEmpty()
+	@IsBoolean()
+	@ApiProperty({
+		required: true,
+		type: 'boolean',
+	})
+	public isMainResponsible: boolean;
+
+	@IsString()
+	@IsMobilePhone()
+	@ApiProperty({
+		required: true,
+		type: 'string',
+	})
+	public phone: string;
 
 	@IsNotEmpty()
 	@IsInt()
@@ -51,13 +61,15 @@ export class CreateOrUpdateValidator
 	})
 	public addressCep: string;
 
-	@IsArray()
-	@ValidateNested({ each: true })
-	@ArrayMinSize(1)
-	@ArrayMaxSize(30)
+	@IsNotEmpty()
+	@IsString()
+	@MinLength(3)
+	@MaxLength(100)
 	@ApiProperty({
 		required: true,
-		type: [CreateResponsibleValidator],
+		type: 'string',
+		minLength: 3,
+		maxLength: 100,
 	})
-	public responsibles: IResponsible[];
+	public addressFormatted: string;
 }

@@ -5,11 +5,19 @@ import {
 	MaxLength,
 	MinLength,
 	Validate,
+	IsArray,
+	ValidateNested,
+	ArrayMinSize,
+	ArrayMaxSize,
 } from 'class-validator';
 import { CustomValidateCNPJ } from './custom/cnpj';
 import { ICompany } from '../interfaces';
+import { IResponsible } from '../../responsibles/interfaces';
+import { CreateResponsibleValidator } from '../../responsibles/validators/create';
 
-export class CreateOrUpdateValidator implements Omit<ICompany, 'id'> {
+export class CreateOrUpdateCompanyValidator
+	implements Omit<ICompany, 'id' | 'responsibles'>
+{
 	@IsNotEmpty()
 	@IsString()
 	@MinLength(3)
@@ -41,4 +49,14 @@ export class CreateOrUpdateValidator implements Omit<ICompany, 'id'> {
 		example: '65.240.834/0001-10',
 	})
 	public cnpj: string;
+
+	@IsArray()
+	@ValidateNested({ each: true })
+	@ArrayMinSize(1)
+	@ArrayMaxSize(30)
+	@ApiProperty({
+		required: true,
+		type: [CreateResponsibleValidator],
+	})
+	public responsibles: IResponsible[];
 }

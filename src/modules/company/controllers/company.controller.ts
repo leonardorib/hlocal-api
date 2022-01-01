@@ -9,7 +9,6 @@ import {
 	UseGuards,
 	Query,
 	Delete,
-	ValidationPipe,
 } from '@nestjs/common';
 import {
 	ApiResponse,
@@ -21,7 +20,7 @@ import { DBCompany } from '../../database/entities/company';
 import { JwtAuthGuard, CurrentUser } from '../../auth/guards/jwt-auth.guard';
 
 import { CompanyService } from '../services/company.service';
-import { CreateOrUpdateValidator } from '../validators/createOrUpdate';
+import { CreateOrUpdateCompanyValidator } from '../validators/createOrUpdate';
 import { IUser } from '../../user/interfaces';
 import { IPaginationRequestQuery } from '../../shared/validators/paginationRequest';
 
@@ -66,7 +65,7 @@ export class CompanyController {
 	@ApiResponse({ status: 200, type: DBCompany })
 	@ApiBearerAuth()
 	public async create(
-		@Body() model: CreateOrUpdateValidator,
+		@Body() model: CreateOrUpdateCompanyValidator,
 		@CurrentUser() currentUser: IUser,
 	) {
 		return this.companyService.create(model, currentUser);
@@ -78,7 +77,7 @@ export class CompanyController {
 	@ApiResponse({ status: 200, type: DBCompany })
 	public async update(
 		@Param('companyId', ParseUUIDPipe) companyId: string,
-		@Body() model: CreateOrUpdateValidator,
+		@Body() model: CreateOrUpdateCompanyValidator,
 		@CurrentUser() currentUser: IUser,
 	) {
 		return this.companyService.update(companyId, model, currentUser);

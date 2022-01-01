@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from './repositories/user';
 import { CompanyRepository } from './repositories/company';
 import { LocationRepository } from './repositories/location';
+import { DBResponsible } from './entities/responsible';
 
 @Module({
 	imports: [
@@ -10,6 +11,7 @@ import { LocationRepository } from './repositories/location';
 			UserRepository,
 			CompanyRepository,
 			LocationRepository,
+			DBResponsible,
 		]),
 	],
 	exports: [
@@ -17,6 +19,7 @@ import { LocationRepository } from './repositories/location';
 			UserRepository,
 			CompanyRepository,
 			LocationRepository,
+			DBResponsible,
 		]),
 	],
 	providers: [],
