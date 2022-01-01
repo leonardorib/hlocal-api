@@ -1,10 +1,10 @@
 import { Module, Controller, Get } from '@nestjs/common';
-import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserModule } from './user';
 import { AuthModule } from './auth';
 import { CompanyModule } from './company';
+import { LocationModule } from './location';
 import { DBUser } from './database/entities/user';
 
 @Controller()
@@ -23,6 +23,7 @@ class RootController {
 		AuthModule,
 		UserModule,
 		CompanyModule,
+		LocationModule,
 	],
 	controllers: [RootController],
 })

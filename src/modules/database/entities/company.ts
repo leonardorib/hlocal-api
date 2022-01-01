@@ -5,8 +5,10 @@ import {
 	CreateDateColumn,
 	UpdateDateColumn,
 	ManyToOne,
+	OneToMany,
 } from 'typeorm';
 import { ICompany } from '../../company/interfaces';
+import { DBLocation } from './location';
 import { DBUser } from './user';
 
 @Entity('companies')
@@ -22,6 +24,9 @@ export class DBCompany implements ICompany {
 
 	@ManyToOne(() => DBUser, (dbUser) => dbUser.companies, { eager: true })
 	public user: DBUser;
+
+	@OneToMany(() => DBLocation, (dbLocation) => dbLocation.company)
+	public locations: Promise<DBLocation>;
 
 	@Column()
 	description: string;
