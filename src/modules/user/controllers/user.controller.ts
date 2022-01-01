@@ -16,8 +16,8 @@ import { UserService } from '../services/user.service';
 import { CreateValidator, UpdateValidator } from '../validators/createOrUpdate';
 import { IUser } from '../interfaces';
 
-@ApiTags('User')
-@Controller()
+@ApiTags('Users')
+@Controller('users')
 export class UserController {
 	constructor(private userService: UserService) {}
 

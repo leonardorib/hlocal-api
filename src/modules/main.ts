@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserModule } from './user';
 import { AuthModule } from './auth';
+import { CompanyModule } from './company';
 import { DBUser } from './database/entities/user';
 
 @Controller()
@@ -20,8 +21,8 @@ class RootController {
 			entities: [DBUser],
 		}),
 		AuthModule,
-		RouterModule.register([{ path: '/user', module: UserModule }]),
 		UserModule,
+		CompanyModule,
 	],
 	controllers: [RootController],
 })
