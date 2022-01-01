@@ -10,8 +10,7 @@ services:
         ports:
             - 4000:4000
         volumes:
-            - ./src:/home/app/hlocal-api/src
-            - /home/app/hlocal-api/node_modules
+            - ./:/home/app/hlocal-api
         command: sh -c "npm install && npm run dev"
         links:
             - database
