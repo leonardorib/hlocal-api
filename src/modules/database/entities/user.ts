@@ -6,7 +6,7 @@ import {
 	UpdateDateColumn,
 	OneToMany,
 } from 'typeorm';
-import { Exclude } from 'class-transformer';
+import { Exclude, classToPlain } from 'class-transformer';
 import { IUser } from '../../user/interfaces';
 import { DBCompany } from './company';
 @Entity('users')
@@ -21,8 +21,12 @@ export class DBUser implements IUser {
 	email: string;
 
 	@Column()
-	@Exclude()
+	@Exclude({ toPlainOnly: true })
 	password: string;
+
+	toJSON() {
+		return classToPlain(this);
+	}
 
 	@OneToMany(() => DBCompany, (dbCompany) => dbCompany.user)
 	public companies: Promise<DBCompany>;
