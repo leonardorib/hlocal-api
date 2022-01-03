@@ -5,7 +5,7 @@ import {
 	UnauthorizedException,
 } from '@nestjs/common';
 import { IUser } from '../interfaces';
-
+import * as bcrypt from 'bcryptjs';
 import { UserRepository } from '../../database/repositories/user';
 import { classToClass } from 'class-transformer';
 
@@ -33,7 +33,15 @@ export class UserService {
 		);
 		if (!isEmailAvailable) throw new ConflictException('email-unavailable');
 
-		const user = await this.userRepository.createUser(model);
+		const hashedPassword = bcrypt.hashSync(
+			model.password,
+			bcrypt.genSaltSync(),
+		);
+
+		const user = await this.userRepository.createUser({
+			...model,
+			password: hashedPassword,
+		});
 
 		return classToClass(user);
 	}

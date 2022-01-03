@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../../database/repositories/user';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcryptjs';
 import { IUser } from '../../user/interfaces';
 import { classToClass } from 'class-transformer';
 
@@ -17,7 +18,8 @@ export class AuthService {
 		password: string,
 	): Promise<IUser | null> {
 		const user = await this.userRepository.findByEmail(email);
-		if (user && user.password === password) {
+
+		if (user && bcrypt.compareSync(password, user.password)) {
 			return classToClass(user);
 		}
 		return null;
