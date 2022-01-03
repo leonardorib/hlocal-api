@@ -1,13 +1,13 @@
 import { ICompany } from '../../company/interfaces';
 import { ILocation } from '../../location/interfaces';
+import { IAddress } from '../../shared/interfaces/address';
 
 export interface IResponsible {
 	id?: string;
 	name: string;
 	phone: string;
 
-	addressFormatted: string;
-	addressCep: string;
+	address: IAddress;
 
 	isMainResponsible: boolean;
 
@@ -21,6 +21,5 @@ export interface IResponsible {
 export interface ICreateResponsible {
 	name: string;
 	phone: string;
-	addressCep: string;
-	addressFormatted: string;
+	address: IAddress;
 }

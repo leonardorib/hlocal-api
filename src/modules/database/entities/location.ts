@@ -8,22 +8,20 @@ import {
 	OneToMany,
 } from 'typeorm';
 import { ILocation } from '../../location/interfaces';
+import { DBAddress } from './address';
 import { DBCompany } from './company';
 import { DBResponsible } from './responsible';
 
 @Entity('locations')
 export class DBLocation implements ILocation {
 	@PrimaryGeneratedColumn('uuid')
-	id: string;
+	public id: string;
 
 	@Column()
-	name: string;
+	public name: string;
 
-	@Column()
-	addressCep: string;
-
-	@Column()
-	addressFormatted: string;
+	@Column(() => DBAddress)
+	public address: DBAddress;
 
 	@ManyToOne(() => DBCompany, (dbCompany) => dbCompany.locations, {
 		eager: true,

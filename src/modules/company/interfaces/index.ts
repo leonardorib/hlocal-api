@@ -11,3 +11,10 @@ export interface ICompany {
 
 	user?: IUser;
 }
+
+export interface ICreateCompany {
+	name: string;
+	cnpj: string;
+	description: string;
+	responsibles: IResponsible[];
+}

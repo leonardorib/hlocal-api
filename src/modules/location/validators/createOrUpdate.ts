@@ -4,9 +4,6 @@ import {
 	IsString,
 	MinLength,
 	MaxLength,
-	Length,
-	IsInt,
-	IsPositive,
 	IsArray,
 	ValidateNested,
 	ArrayMinSize,
@@ -14,6 +11,7 @@ import {
 } from 'class-validator';
 import { IResponsible } from '../../responsibles/interfaces';
 import { CreateResponsibleValidator } from '../../responsibles/validators/create';
+import { AddressValidator } from '../../shared/validators/address';
 import { ILocation } from '../interfaces';
 
 export class CreateOrUpdateValidator
@@ -31,25 +29,12 @@ export class CreateOrUpdateValidator
 	})
 	public name: string;
 
-	@IsNotEmpty()
-	@IsInt()
-	@IsPositive()
+	@ValidateNested()
 	@ApiProperty({
 		required: true,
-		type: 'integer',
+		type: AddressValidator,
 	})
-	public addressNumber: number;
-
-	@IsNotEmpty()
-	@IsString()
-	@Length(8)
-	@ApiProperty({
-		required: true,
-		type: 'string',
-		minLength: 8,
-		maxLength: 8,
-	})
-	public addressCep: string;
+	public address: AddressValidator;
 
 	@IsArray()
 	@ValidateNested({ each: true })

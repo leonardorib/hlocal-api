@@ -4,12 +4,11 @@ import {
 	IsString,
 	MinLength,
 	MaxLength,
-	Length,
-	IsInt,
-	IsPositive,
-	IsMobilePhone,
+	IsPhoneNumber,
 	IsBoolean,
+	ValidateNested,
 } from 'class-validator';
+import { AddressValidator } from '../../shared/validators/address';
 import { IResponsible } from '../interfaces';
 
 export class CreateResponsibleValidator implements Omit<IResponsible, 'id'> {
@@ -34,42 +33,17 @@ export class CreateResponsibleValidator implements Omit<IResponsible, 'id'> {
 	public isMainResponsible: boolean;
 
 	@IsString()
-	@IsMobilePhone()
+	@IsPhoneNumber('BR')
 	@ApiProperty({
 		required: true,
 		type: 'string',
 	})
 	public phone: string;
 
-	@IsNotEmpty()
-	@IsInt()
-	@IsPositive()
+	@ValidateNested()
 	@ApiProperty({
 		required: true,
-		type: 'integer',
+		type: AddressValidator,
 	})
-	public addressNumber: number;
-
-	@IsNotEmpty()
-	@IsString()
-	@Length(8)
-	@ApiProperty({
-		required: true,
-		type: 'string',
-		minLength: 8,
-		maxLength: 8,
-	})
-	public addressCep: string;
-
-	@IsNotEmpty()
-	@IsString()
-	@MinLength(3)
-	@MaxLength(100)
-	@ApiProperty({
-		required: true,
-		type: 'string',
-		minLength: 3,
-		maxLength: 100,
-	})
-	public addressFormatted: string;
+	public address: AddressValidator;
 }

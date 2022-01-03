@@ -40,7 +40,7 @@ export class CompanyService {
 	): Promise<IPaginationResponse<ICompany>> {
 		const user = await this.userRepository.findById(currentUser.id);
 
-		return this.companyRepository.findAllByUser(user, page, 20);
+		return this.companyRepository.findAllByUser(user, page, 15);
 	}
 
 	private validateAndTransformCnpj(cnpj: string) {

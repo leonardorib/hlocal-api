@@ -10,7 +10,6 @@ import { IUser } from '../../user/interfaces';
 import { CompanyRepository } from '../../database/repositories/company';
 import { IPaginationResponse } from 'modules/shared/interfaces/pagination';
 import { LocationRepository } from '../../database/repositories/location';
-import { AddressService } from '../../shared/services/address.service';
 import { IResponsible } from '../../responsibles/interfaces';
 
 @Injectable()
@@ -18,7 +17,6 @@ export class LocationService {
 	constructor(
 		private locationRepository: LocationRepository,
 		private companyRepository: CompanyRepository,
-		private addressService: AddressService,
 	) {}
 
 	public async findById(id: string, currentUser: IUser): Promise<ILocation> {
@@ -47,15 +45,14 @@ export class LocationService {
 			throw new UnauthorizedException('access-denied');
 		}
 
-		return this.locationRepository.findAllByCompany(company, page, 20);
+		return this.locationRepository.findAllByCompany(company, page, 15);
 	}
 
 	public async create(
 		createLocation: ICreateLocation,
 		currentUser: IUser,
 	): Promise<ILocation> {
-		const { addressCep, addressNumber, name, companyId, responsibles } =
-			createLocation;
+		const { address, name, companyId, responsibles } = createLocation;
 
 		const company = await this.companyRepository.findById(companyId);
 		if (!company) throw new NotFoundException('company-not-found');
@@ -63,17 +60,11 @@ export class LocationService {
 			throw new UnauthorizedException('access-denied');
 		}
 
-		const { cep, formattedAddress } =
-			await this.addressService.getFormattedAddress(
-				addressCep,
-				addressNumber,
-			);
 		this.validateResponsibles(responsibles);
 		return this.locationRepository.createLocation(
 			{
 				name,
-				addressCep: cep,
-				addressFormatted: formattedAddress,
+				address,
 				responsibles,
 			},
 			company,
@@ -85,8 +76,7 @@ export class LocationService {
 		updateLocation: IUpdateLocation,
 		currentUser: IUser,
 	): Promise<ILocation> {
-		const { name, addressCep, addressNumber, responsibles } =
-			updateLocation;
+		const { name, address, responsibles } = updateLocation;
 
 		const location = await this.locationRepository.findById(id);
 		if (!location) {
@@ -96,24 +86,12 @@ export class LocationService {
 			throw new UnauthorizedException('access-denied');
 		}
 
-		let newCep = addressCep;
-		let newAddress = location.addressFormatted;
-		if (newCep !== location.addressCep) {
-			const { cep, formattedAddress } =
-				await this.addressService.getFormattedAddress(
-					addressCep,
-					addressNumber,
-				);
-			newCep = cep;
-			newAddress = formattedAddress;
-		}
 		this.validateResponsibles(responsibles);
 		const locationUpdated = await this.locationRepository.updateLocation(
 			id,
 			{
 				name,
-				addressCep: newCep,
-				addressFormatted: newAddress,
+				address,
 				responsibles,
 			},
 		);

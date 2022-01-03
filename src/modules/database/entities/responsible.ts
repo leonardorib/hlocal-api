@@ -7,6 +7,7 @@ import {
 	ManyToOne,
 } from 'typeorm';
 import { IResponsible } from '../../responsibles/interfaces';
+import { DBAddress } from './address';
 import { DBCompany } from './company';
 import { DBLocation } from './location';
 
@@ -21,19 +22,20 @@ export class DBResponsible implements IResponsible {
 	@Column()
 	public phone: string;
 
-	@Column()
-	public addressCep: string;
-
 	@Column('boolean', { default: false, nullable: false })
 	public isMainResponsible: boolean;
 
-	@Column()
-	public addressFormatted: string;
+	@Column(() => DBAddress)
+	public address: DBAddress;
 
-	@ManyToOne(() => DBCompany, (dbCompany) => dbCompany.responsibles)
+	@ManyToOne(() => DBCompany, (dbCompany) => dbCompany.responsibles, {
+		onDelete: 'CASCADE',
+	})
 	public company: DBCompany | null;
 
-	@ManyToOne(() => DBLocation, (dbLocation) => dbLocation.responsibles)
+	@ManyToOne(() => DBLocation, (dbLocation) => dbLocation.responsibles, {
+		onDelete: 'CASCADE',
+	})
 	public location: DBLocation | null;
 
 	@CreateDateColumn()

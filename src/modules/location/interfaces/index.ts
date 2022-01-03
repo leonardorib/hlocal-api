@@ -1,11 +1,11 @@
 import { ICompany } from '../../company/interfaces';
 import { IResponsible } from '../../responsibles/interfaces';
+import { IAddress } from '../../shared/interfaces/address';
 
 export interface ILocation {
 	id: string;
 	name: string;
-	addressFormatted: string;
-	addressCep: string;
+	address: IAddress;
 
 	responsibles: IResponsible[];
 
@@ -14,8 +14,7 @@ export interface ILocation {
 
 export interface IUpdateLocation {
 	name: string;
-	addressCep: string;
-	addressNumber: number;
+	address: IAddress;
 	responsibles: IResponsible[];
 }
 
