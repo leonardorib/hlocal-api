@@ -82,6 +82,10 @@ export class CompanyService {
 
 		const cnpjNumber = this.validateAndTransformCnpj(cnpj);
 
+		if (await this.isCnpjInUse(cnpjNumber)) {
+			throw new BadRequestException('cnpj already in use');
+		}
+
 		this.validateResponsibles(model.responsibles);
 
 		return this.companyRepository.createCompany({
