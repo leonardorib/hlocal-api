@@ -24,11 +24,11 @@ export class CompanyService {
 		const company = await this.companyRepository.findById(id);
 
 		if (!company) {
-			throw new NotFoundException('company-not-found');
+			throw new NotFoundException('Empresa não encontrada');
 		}
 
 		if (company.user.id !== currentUser.id) {
-			throw new UnauthorizedException('access-denied');
+			throw new UnauthorizedException('Acesso negado');
 		}
 
 		return company;
@@ -47,7 +47,7 @@ export class CompanyService {
 		const isCnpjValid = cnpjValidator.isValid(cnpj);
 
 		if (!isCnpjValid) {
-			throw new BadRequestException('Invalid cnpj');
+			throw new BadRequestException('CNPJ inválido');
 		}
 
 		return cnpjValidator.strip(cnpj);
@@ -64,13 +64,11 @@ export class CompanyService {
 		);
 
 		if (mainResponsibles.length === 0) {
-			throw new BadRequestException('Must have one main responsible');
+			throw new BadRequestException('Deve ter no mínimo um responsável');
 		}
 
 		if (mainResponsibles.length > 1) {
-			throw new BadRequestException(
-				'Must have only one main responsible',
-			);
+			throw new BadRequestException('Deve ter um responsável principal');
 		}
 	}
 
@@ -83,7 +81,7 @@ export class CompanyService {
 		const cnpjNumber = this.validateAndTransformCnpj(cnpj);
 
 		if (await this.isCnpjInUse(cnpjNumber)) {
-			throw new BadRequestException('cnpj already in use');
+			throw new BadRequestException('CNPJ em uso');
 		}
 
 		this.validateResponsibles(model.responsibles);
@@ -103,11 +101,11 @@ export class CompanyService {
 		const company = await this.companyRepository.findById(id);
 
 		if (!company) {
-			throw new NotFoundException('company-not-found');
+			throw new NotFoundException('Empresa não encontrada');
 		}
 
 		if (company.user.id !== currentUser.id) {
-			throw new UnauthorizedException('access-denied');
+			throw new UnauthorizedException('Acesso negado');
 		}
 
 		const { cnpj } = model;
@@ -116,7 +114,7 @@ export class CompanyService {
 
 		if (company.cnpj !== cnpjNumber) {
 			if (await this.isCnpjInUse(cnpjNumber)) {
-				throw new BadRequestException('cnpj already in use');
+				throw new BadRequestException('CNPJ em uso');
 			}
 		}
 
@@ -134,11 +132,11 @@ export class CompanyService {
 		const company = await this.companyRepository.findById(id);
 
 		if (!company) {
-			throw new NotFoundException('company-not-found');
+			throw new NotFoundException('Empresa não encontrada');
 		}
 
 		if (company.user.id !== currentUser.id) {
-			throw new UnauthorizedException('access-denied');
+			throw new UnauthorizedException('Acesso negado');
 		}
 
 		return this.companyRepository.deleteCompany(id);

@@ -15,13 +15,13 @@ export class UserService {
 
 	public async findById(id: string, currentUser: IUser): Promise<IUser> {
 		if (id !== currentUser.id) {
-			throw new UnauthorizedException('access-denied');
+			throw new UnauthorizedException('Acesso negado');
 		}
 
 		const user = await this.userRepository.findById(id);
 
 		if (!user) {
-			throw new NotFoundException('user-not-found');
+			throw new NotFoundException('Usuário não encontrado');
 		}
 
 		return classToClass(user);
@@ -31,7 +31,8 @@ export class UserService {
 		const isEmailAvailable = await this.userRepository.isEmailAvailable(
 			model.email,
 		);
-		if (!isEmailAvailable) throw new ConflictException('email-unavailable');
+		if (!isEmailAvailable)
+			throw new ConflictException('Email indisponível');
 
 		const hashedPassword = bcrypt.hashSync(
 			model.password,
@@ -55,7 +56,7 @@ export class UserService {
 		const user = await this.userRepository.findById(currentUser.id);
 
 		if (user.id !== currentUser.id) {
-			throw new UnauthorizedException('access-denied');
+			throw new UnauthorizedException('Acesso negado');
 		}
 
 		if (user.email !== model.email) {
@@ -63,7 +64,7 @@ export class UserService {
 				model.email,
 			);
 			if (!isEmailAvailable)
-				throw new ConflictException('email-unavailable');
+				throw new ConflictException('Email indisponível');
 		}
 
 		const userUpdated = await this.userRepository.updateUser(id, {

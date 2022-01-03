@@ -23,11 +23,11 @@ export class LocationService {
 		const location = await this.locationRepository.findById(id);
 
 		if (!location) {
-			throw new NotFoundException('location-not-found');
+			throw new NotFoundException('Local não encontrado');
 		}
 
 		if (location.company.user.id !== currentUser.id) {
-			throw new UnauthorizedException('access-denied');
+			throw new UnauthorizedException('Acesso negado');
 		}
 
 		return location;
@@ -40,9 +40,9 @@ export class LocationService {
 	): Promise<IPaginationResponse<ILocation>> {
 		const company = await this.companyRepository.findById(companyId);
 
-		if (!company) throw new NotFoundException('company-not-found');
+		if (!company) throw new NotFoundException('Empresa não encontrada');
 		if (company.user.id !== currentUser.id) {
-			throw new UnauthorizedException('access-denied');
+			throw new UnauthorizedException('Acesso negado');
 		}
 
 		return this.locationRepository.findAllByCompany(company, page, 15);
@@ -55,9 +55,9 @@ export class LocationService {
 		const { address, name, companyId, responsibles } = createLocation;
 
 		const company = await this.companyRepository.findById(companyId);
-		if (!company) throw new NotFoundException('company-not-found');
+		if (!company) throw new NotFoundException('Empresa não encontrada');
 		if (company.user.id !== currentUser.id) {
-			throw new UnauthorizedException('access-denied');
+			throw new UnauthorizedException('Acesso negado');
 		}
 
 		this.validateResponsibles(responsibles);
@@ -80,10 +80,10 @@ export class LocationService {
 
 		const location = await this.locationRepository.findById(id);
 		if (!location) {
-			throw new NotFoundException('location-not-found');
+			throw new NotFoundException('Local não encontrado');
 		}
 		if (location.company.user.id !== currentUser.id) {
-			throw new UnauthorizedException('access-denied');
+			throw new UnauthorizedException('Acesso negado');
 		}
 
 		this.validateResponsibles(responsibles);
@@ -105,12 +105,12 @@ export class LocationService {
 		);
 
 		if (mainResponsibles.length === 0) {
-			throw new BadRequestException('Must have one main responsible');
+			throw new BadRequestException('Deve ter no mínimo um responsável');
 		}
 
 		if (mainResponsibles.length > 1) {
 			throw new BadRequestException(
-				'Must have only one main responsible',
+				'Deve ter no mínimo um responsável principal',
 			);
 		}
 	}
@@ -119,11 +119,11 @@ export class LocationService {
 		const location = await this.locationRepository.findById(id);
 
 		if (!location) {
-			throw new NotFoundException('location-not-found');
+			throw new NotFoundException('Local não encontrado');
 		}
 
 		if (location.company.user.id !== currentUser.id) {
-			throw new UnauthorizedException('access-denied');
+			throw new UnauthorizedException('Acesso negado');
 		}
 
 		return this.locationRepository.deleteLocation(id);
