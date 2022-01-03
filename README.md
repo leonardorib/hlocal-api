@@ -41,3 +41,11 @@ npm run docker:db-run-migrations
 You can check out the frontend repository at:
 
 https://github.com/leonardorib/hlocal-app
+
+## The author
+
+Made with :heart: by Leonardo Ribeiro. :brazil:
+
+Get in touch! :smiley:
+
+<div><a href="https://www.linkedin.com/in/leonardorib/"><img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-leonardorib-blue?style=for-the-badge&logo=linkedin&labelColor=333333"></a></div>&nbsp&nbsp<div><a href="mailto:leonardo.rib@hotmail.com"><img alt="Email" src="https://img.shields.io/badge/Email-leonardo.rib@hotmail.com-blue?style=for-the-badge&logo=microsoft-outlook&labelColor=333333"></a></div>
