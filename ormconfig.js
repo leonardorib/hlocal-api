@@ -1,6 +1,3 @@
-// import { ConfigModule } from '@nestjs/config';
-// import dbCimport 'dotenv/config';
-
 const rootDir = process.env.NODE_ENV === 'production' ? 'dist' : 'src';
 module.exports = {
 	name: 'default',
@@ -15,7 +12,7 @@ module.exports = {
 	entities: [rootDir + '/modules/database/entities/**/*.{js,ts}'],
 	migrations: [rootDir + '/modules/database/migrations/**/*.{js,ts}'],
 	cli: {
-		migrationsDir: 'src/modules/database/migrations',
-		entitiesDir: 'src/modules/database/entities',
+		migrationsDir: rootDir + '/modules/database/migrations',
+		entitiesDir: rootDir + '/modules/database/entities',
 	},
 };
